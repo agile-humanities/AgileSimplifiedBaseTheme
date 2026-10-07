@@ -12,10 +12,10 @@
 
   /* PALETTE — change these. Every derived colour below follows them. */
 
-    --colour--1: #00bdd4;                /* clr1: the configuration's $brand_primary; used as is 13 times */
-    --colour--2: #bf609b;                /* clr2: the configuration's $brand_secondary; used as is 24 times */
+    --colour--1: #00bdd4;                /* clr1: the configuration's $brand_primary; used as is 14 times */
+    --colour--2: #bf609b;                /* clr2: the configuration's $brand_secondary; used as is 20 times */
     --colour--3: #0e3a40;                /* clr3: the configuration's $surface_dark; used as is 3 times */
-    --colour--4: #eaf3f4;                /* clr4: the configuration's $surface_light; used as is 4 times */
+    --colour--4: #eaf3f4;                /* clr4: the configuration's $surface_light; used as is 3 times */
     --colour--5: #d98536;                /* clr5: the configuration's $visual_impact; used as is 7 times */
     --colour--6: #315faa;                /* clr6: used as is 2 times */
     --colour--7: #7dbf60;                /* clr7: used as is 2 times */
@@ -171,6 +171,10 @@
   --colour--brand-secondary: #BF609B;
   --colour--brand-secondary-on-light: rgb(160.44, 84.32, 134.36);
   --colour--brand-secondary-on-dark: rgb(206.36, 134.16, 179);
+  --colour--surface-brand: #00BDD4;
+  --colour--on-brand: #00171A;
+  --colour--surface-brand-secondary: #BF609B;
+  --colour--on-brand-secondary: #00171A;
   --animation--heartbeat: 1000;
   --animation--slidetransition: 1000;
   --slide-viewer-background: #00171A;
