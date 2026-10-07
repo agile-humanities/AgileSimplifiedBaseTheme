@@ -11,11 +11,123 @@ $this->headMeta()->setCharset('utf-8');
 $this->headMeta()->appendName('viewport', 'width=device-width, initial-scale=1');
 $this->headTitle($this->setting('installation_title', 'Omeka S'))->setSeparator(' · ');
 // Simplified theme: palette and fonts come from this theme's own settings, applied through the CSS variables the
-// stylesheet reads (--colour--N, --font-*). Browsers that cannot mix colours in CSS keep the built palette.
+// stylesheet reads (--colour--N, --font-*). When a palette colour changes, the derived colour roles (on_impact,
+// brand_primary_on_light …) are recomputed from the new palette with the build's own maths (agile-colour.php), since
+// they follow the palette by rule, not by proportion. Browsers that cannot mix colours in CSS keep the built palette.
 $paletteLines = [];
+$paletteChanged = false;
+$agileColourConfig = [
+    'clr1' => '#00BDD4',
+    'clr2' => '#BF609B',
+    'clr3' => '#0E3A40',
+    'clr4' => '#EAF3F4',
+    'clr5' => '#D98536',
+    'clr6' => '#315FAA',
+    'clr7' => '#7DBF60',
+    'clr8' => '#E1BB0B',
+    'clr9' => '#E5336D',
+    'black' => '#00171A',
+    'white' => 'white',
+    'true_black' => '#000000',
+    'surface_dark' => '$clr3',
+    'surface_light' => '$clr4',
+    'on_dark' => '$white',
+    'on_light' => '$black',
+    'visual_impact' => '$clr5',
+    'brand_primary' => '$clr1',
+    'brand_secondary' => '$clr2',
+    'on_impact' => 'on-colour($visual_impact)',
+    'brand_primary_on_light' => 'ensure-contrast($brand_primary, $surface_light)',
+    'brand_primary_on_dark' => 'ensure-contrast($brand_primary, $surface_dark)',
+    'brand_secondary_on_light' => 'ensure-contrast($brand_secondary, $surface_light)',
+    'brand_secondary_on_dark' => 'ensure-contrast($brand_secondary, $surface_dark)',
+    'surface_brand' => '$brand_primary',
+    'on_brand' => 'on-colour($surface_brand)',
+    'surface_brand_secondary' => '$brand_secondary',
+    'on_brand_secondary' => 'on-colour($surface_brand_secondary)',
+    'bgcolor' => '$white',
+    'footer_bg' => '$black',
+    'menu_background' => 'transparent',
+    'impact' => '$brand_secondary',
+    'cta' => '$brand_primary',
+    'de_activated' => 'neutral(30)',
+    'link_colour' => '$on_light',
+    'link_colour_active' => '$brand_primary_on_light',
+    'link_colour_reversed' => '$on_dark',
+    'link_colour_active_reversed' => '$brand_primary_on_dark',
+    'lightest_neutral' => 'neutral(5)',
+    'lighter_neutral' => 'neutral(30)',
+    'light_neutral' => 'neutral(40)',
+    'neutral' => 'neutral()',
+    'mid_neutral' => 'neutral(60)',
+    'dark_neutral' => 'neutral(70)',
+    'darker_neutral' => 'neutral(80)',
+    'darkest_neutral' => 'neutral(90)',
+    'tablet' => '$tablet_breakpoint',
+    'ultrawide' => '$ultrawide_breakpoint',
+    'row_header_bg' => 'neutral(10)',
+    'row_border_color' => 'neutral(10)',
+    'row_zebra_stripe_color' => 'neutral(3)',
+    'ui_border_color' => 'neutral(40)',
+    'ui_hover_border_color' => '$brand_secondary',
+    'ui_form_text_color' => 'neutral(90)',
+    'btn_color' => '$on_light',
+    'btn_bg_color' => 'neutral(20)',
+    'btn_border_color' => '$ui_border_color',
+    'btn_hover_color' => '$on_light',
+    'btn_hover_border_color' => 'neutral(60)',
+    'btn_hover_bg_color' => 'neutral(40)',
+    'btn_submit_color' => '$on_impact',
+    'btn_submit_bg_color' => '$visual_impact',
+    'btn_submit_border_color' => '$visual_impact',
+    'btn_submit_hover_color' => 'on-colour(mix($white,$visual_impact,10%))',
+    'btn_submit_hover_border_color' => 'mix($white,$visual_impact,10%)',
+    'btn_submit_hover_bg_color' => 'mix($white,$visual_impact,10%)',
+    'btn_search_color' => 'neutral(70)',
+    'btn_search_bg_color' => '$white',
+    'btn_search_border_color' => '$ui_border_color',
+    'btn_search_hover_color' => '$on_light',
+    'btn_search_hover_border_color' => '$brand_secondary',
+    'btn_search_hover_bg_color' => '$white',
+    'btn_reset_color' => 'neutral(90)',
+    'btn_reset_bg_color' => 'neutral(30)',
+    'btn_reset_border_color' => 'neutral(90)',
+    'btn_reset_hover_color' => 'neutral(10)',
+    'btn_reset_hover_bg_color' => 'neutral(90)',
+    'btn_reset_hover_border_color' => 'neutral(90)',
+    'outline_btn_color' => '$mid_neutral',
+    'outline_btn_hover_color' => '$ui_hover_border_color',
+    'very_fast' => '$heartbeat',
+    'slide_transition' => '$slow',
+    'welcome_block_bg' => '$black',
+    'welcome_block_color' => '$on_dark',
+    'menu_color' => '$on_light',
+    'slide_viewer_background' => '$black',
+    'page_marker_background' => 'neutral(30)',
+    'page_marker_background_hover' => '$brand_secondary',
+    'page_marker_background_active' => '$brand_secondary',
+    'circular_audio_color' => '$brand_primary',
+    'circular_audio_background' => '$white',
+    'circular_audio_caption_color' => '$on_light',
+    'transcript_highlight' => 'set-color(2,50)',
+    'transcript_hover' => 'set-color(2,30)',
+]; // the theme's colour configuration, baked in by the generator
 foreach (range(1, 9) as $n) {
     $v = trim((string) $this->themeSetting('clr' . $n, ''));
-    if (preg_match('/^#[0-9a-fA-F]{3,8}$/', $v)) $paletteLines[] = "    --colour--{$n}: {$v};";
+    if (preg_match('/^#[0-9a-fA-F]{3,8}$/', $v) && strcasecmp($v, (string) ($agileColourConfig['clr' . $n] ?? '')) !== 0) {
+        $paletteLines[] = "    --colour--{$n}: {$v};";
+        $agileColourConfig['clr' . $n] = $v;
+        $paletteChanged = true;
+    }
+}
+if ($paletteChanged && is_file(__DIR__ . '/../../agile-colour.php')) {
+    require_once __DIR__ . '/../../agile-colour.php';
+    $agileEvaluator = new AgileSimplifiedColourExpression($agileColourConfig);
+    foreach ($agileColourConfig as $agileKey => $agileValue) {
+        if (AgileSimplifiedColourExpression::isDerived((string) $agileValue) && ($agileColour = $agileEvaluator->resolve($agileKey))) {
+            $paletteLines[] = '    --colour--' . str_replace('_', '-', $agileKey) . ': ' . AgileSimplifiedColourExpression::toCss($agileColour) . ';';
+        }
+    }
 }
 foreach (['basefont' => 'base', 'headingfont' => 'heading', 'altfont' => 'alt', 'codefont' => 'code'] as $fontKey => $fontVar) {
     $v = trim(str_replace([';', '{', '}', '<', '>', '\\'], '', (string) $this->themeSetting($fontKey, '')));

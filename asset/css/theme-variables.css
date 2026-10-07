@@ -21,9 +21,22 @@
     --colour--7: #7dbf60;                /* clr7: used as is 2 times */
     --colour--8: #e1bb0b;                /* clr8: used as is 2 times */
     --colour--9: #e5336d;                /* clr9: used as is 2 times */
-    --colour--black: #00171a;            /* black: the configuration's $on_light, $footer_bg, $welcome_block_bg, $slide_viewer_background; used as is 76 times */
+    --colour--black: #00171a;            /* black: the configuration's $on_light, $footer_bg, $welcome_block_bg, $slide_viewer_background; used as is 71 times */
     --colour--white: #ffffff;            /* white: the configuration's $on_dark, $bgcolor, $btn_submit_hover_color, $btn_submit_hover_border_color, $btn_submit_hover_bg_color, $btn_search_bg_color, $btn_search_hover_bg_color, $circular_audio_background; used as is 88 times */
     --colour--true-black: #000000;       /* true_black: used as is 0 times */
+
+  /* DERIVED ROLES — text colours the build worked out from the palette by rule (legibility), not by proportion: a brand colour */
+  /* as it is when it reads on its surface, otherwise darkened or lightened until it does. The admin's palette layer recomputes */
+  /* them when the palette changes. Set one here only to pin it. */
+
+    --colour--on-impact: #00171a;                    /* on_impact: on-colour($visual_impact) */
+    --colour--brand-primary-on-light: rgb(0, 119.28, 133.88); /* brand_primary_on_light: ensure-contrast($brand_primary, $surface_light) */
+    --colour--brand-primary-on-dark: #00bdd4;        /* brand_primary_on_dark: ensure-contrast($brand_primary, $surface_dark) */
+    --colour--brand-secondary-on-light: rgb(160.44, 84.32, 134.36); /* brand_secondary_on_light: ensure-contrast($brand_secondary, $surface_light) */
+    --colour--brand-secondary-on-dark: rgb(206.36, 134.16, 179); /* brand_secondary_on_dark: ensure-contrast($brand_secondary, $surface_dark) */
+    --colour--on-brand: #00171a;                     /* on_brand: on-colour($surface_brand) */
+    --colour--on-brand-secondary: #00171a;           /* on_brand_secondary: on-colour($surface_brand_secondary) */
+    --colour--btn-submit-hover-color: #00171a;       /* btn_submit_hover_color: on-colour(mix($white,$visual_impact,10%)) */
 
   /* FONTS — change these. A family must be available to the browser: a system font, a font the theme bundles, or one loaded by your own @import or <link>. */
 
@@ -164,17 +177,10 @@
   --colour--surface-dark: #0E3A40;
   --colour--on-dark: white;
   --colour--visual-impact: #D98536;
-  --colour--on-impact: #00171A;
   --colour--brand-primary: #00BDD4;
-  --colour--brand-primary-on-light: rgb(0, 119.28, 133.88);
-  --colour--brand-primary-on-dark: #00BDD4;
   --colour--brand-secondary: #BF609B;
-  --colour--brand-secondary-on-light: rgb(160.44, 84.32, 134.36);
-  --colour--brand-secondary-on-dark: rgb(206.36, 134.16, 179);
   --colour--surface-brand: #00BDD4;
-  --colour--on-brand: #00171A;
   --colour--surface-brand-secondary: #BF609B;
-  --colour--on-brand-secondary: #00171A;
   --animation--heartbeat: 1000;
   --animation--slidetransition: 1000;
   --slide-viewer-background: #00171A;
