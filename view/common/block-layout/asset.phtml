@@ -1,0 +1,29 @@
+<?php /* Generated from the Advanced Agile Base Theme by tools/build-simplified.js — edit the source there, not this file. */ ?>
+<?php $escape = $this->plugin('escapeHtml'); ?>
+<!-- BEGIN TEMPLATE: /common/block-layout/asset.phtml -->
+<div class="assets">
+  <?php foreach ($attachments as $attachment): ?>
+    <?php $asset = $attachment['asset']; ?>
+    <div class="asset">
+      <?php $assetImage = ($asset) ? $this->thumbnail($asset, 'square') : ''; ?>
+      <?php $page = (array_key_exists('page', $attachment)) ? $attachment['page'] : null; ?>
+      <?php
+        /** @var Omeka\Api\Representation\SitePageRepresentation $page */
+        if ($page):
+      ?>
+
+        <?php $altLinkTitle = ($attachment['alt_link_title'] !== '') ? $escape($attachment['alt_link_title']) : false; ?>
+        <?php printf('<a href="%s" title="%s">%s</a>',
+            $escape($page->siteUrl()),
+                    $altLinkTitle ? $altLinkTitle : $escape($page->title()),
+                    $assetImage) ?>
+      <?php else: ?>
+        <?= $assetImage; ?>
+      <?php endif; ?>
+      <?php if ($attachment['caption'] !== ''): ?>
+        <div class="caption"><?= $escape($attachment['caption']); ?></div>
+      <?php endif; ?>
+    </div>
+  <?php endforeach; ?>
+</div>
+<!-- END TEMPLATE: /common/block-layout/asset.phtml -->

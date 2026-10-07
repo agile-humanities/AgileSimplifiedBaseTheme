@@ -1,0 +1,27 @@
+{
+  "generatedAt": "2026-10-07T16:15:33.380Z",
+  "source": "AgileBaseOmekaTheme",
+  "sourceVersion": "2.0.0-dev",
+  "sourceCommit": "cdcfee268fd9981401d1298b87d127b2b72395ce",
+  "generator": "tools/build-simplified.js",
+  "templates": [
+    "layout/layout.phtml",
+    "agile-item/card.phtml",
+    "common/search-form.phtml",
+    "common/linked-resources.phtml",
+    "common/pagination.phtml",
+    "common/pagination-mini.phtml",
+    "common/resource-values.phtml",
+    "common/site-page-pagination.phtml",
+    "common/sort-selector.phtml",
+    "common/block-layout/asset.phtml",
+    "common/block-layout/browse-preview.phtml",
+    "common/block-layout/item-with-metadata.phtml",
+    "common/block-layout/line-break.phtml",
+    "common/block-layout/page-date-time.phtml",
+    "omeka/site/index/search.phtml",
+    "omeka/site/item/browse.phtml",
+    "omeka/site/page/show.phtml"
+  ],
+  "assetsFrom": "gulp build --variables in omeka-generic-2026-omeka"
+}

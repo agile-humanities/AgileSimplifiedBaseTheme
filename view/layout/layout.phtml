@@ -1,0 +1,197 @@
+<?php /* Generated from the Advanced Agile Base Theme by tools/build-simplified.js — edit the source there, not this file. */ ?>
+<! -- START OF /LAYOUT/LAYOUT.PHTML -->
+<?php
+
+/** @var \Omeka\Api\Representation\SiteRepresentation $site */
+$escape = $this->plugin('escapeHtml');
+$siteAssetUrl = $this->plugin('assetUrl'); // Simplified theme: its own assets, no per-site builds
+$siteTitle = $site->title();
+$this->htmlElement('html')->setAttribute('lang', $this->lang());
+$this->headMeta()->setCharset('utf-8');
+$this->headMeta()->appendName('viewport', 'width=device-width, initial-scale=1');
+$this->headTitle($this->setting('installation_title', 'Omeka S'))->setSeparator(' · ');
+// Simplified theme: palette and fonts come from this theme's own settings, applied through the CSS variables the
+// stylesheet reads (--colour--N, --font-*). Browsers that cannot mix colours in CSS keep the built palette.
+$paletteLines = [];
+foreach (range(1, 9) as $n) {
+    $v = trim((string) $this->themeSetting('clr' . $n, ''));
+    if (preg_match('/^#[0-9a-fA-F]{3,8}$/', $v)) $paletteLines[] = "    --colour--{$n}: {$v};";
+}
+foreach (['basefont' => 'base', 'headingfont' => 'heading', 'altfont' => 'alt', 'codefont' => 'code'] as $fontKey => $fontVar) {
+    $v = trim(str_replace([';', '{', '}', '<', '>', '\\'], '', (string) $this->themeSetting($fontKey, '')));
+    if ($v !== '') $paletteLines[] = "    --font-{$fontVar}: {$v};";
+}
+if ($paletteLines) {
+    $this->headStyle()->appendStyle("@supports (color: color-mix(in srgb, red, blue)) {\n  :root {\n" . implode("\n", $paletteLines) . "\n  }\n}");
+}
+$this->headLink()->prependStylesheet($siteAssetUrl('css/vendor.min.css'));
+$this->headLink()->prependStylesheet($siteAssetUrl('css/iconfonts.css', 'Omeka'));
+$this->headLink()->appendStylesheet($siteAssetUrl('css/style.min.css'));
+$this->headScript()->prependFile($siteAssetUrl('js/default.js'));
+$this->headScript()->prependFile($siteAssetUrl('js/core.min.js'));
+$this->headScript()->prependFile($siteAssetUrl('js/global.js', 'Omeka'));
+$this->headScript()->prependFile($siteAssetUrl('js/vendor.js'));
+$this->headScript()->prependFile($siteAssetUrl('vendor/jquery/jquery.min.js', 'Omeka'));
+
+// Custom stylesheets: the theme's own custom.css (developer, in git), then the CSS administrators write in Omeka
+// (Settings > Theme styling for all sites, then Site settings > Theme styling for this site), loaded last.
+$this->headLink()->appendStylesheet($siteAssetUrl('../custom.css'));
+$this->headScript()->appendFile($siteAssetUrl('../custom.js'));
+if ($this->getHelperPluginManager()->has('customCss')) { $this->customCss()->inject(); } // Agile Theme Tools CSS layers, when the module is present
+
+$this->trigger('view.layout');
+
+$userBar = $this->userBar();
+$nav = $site->publicNav();
+$container = $nav->getContainer();
+$activePage = $nav->findActive($container);
+
+// Theme setting "Top Navigation Depth": 0 shows every level.
+$navDepth = (int) $this->themeSetting('nav_depth', 0);
+$navOptions = $navDepth > 0 ? ['maxDepth' => $navDepth - 1] : [];
+
+// Add the page slug as a body class in case it’s needed for styling.
+
+if ($activePage && method_exists($activePage['page'],'getParams') && array_key_exists('page-slug',$activePage['page']->getParams())) {
+    $this->htmlElement('body')->appendAttribute('class', $activePage['page']->getParams()['page-slug']);
+}
+
+// Add the site slug as a body class, so one stylesheet can carry site-specific rules.
+
+if ($site && $site->slug()) {
+  $this->htmlElement('body')->appendAttribute('class',"site-". $site->slug());
+}
+
+if (!empty($userBar)) {
+    $this->htmlElement('body')->appendAttribute('class','has-admin-bar');
+}
+
+?>
+<?= $this->doctype(); ?>
+<?= $this->htmlElement('html'); ?>
+    <head>
+        <?= $this->headMeta(); ?>
+        <?= $this->headTitle(); ?>
+        <?php if ( !empty($this->themeSetting('font_embed'))): ?>
+        <?= $this->themeSetting('font_embed'); ?>
+        <?php endif; ?>
+        <?= $this->headLink(); ?>
+        <link rel="icon" type="image/png" href=<?= $siteAssetUrl('img/png/favicon/favicon.png'); ?>>
+        <?= $this->headStyle(); ?>
+        <?= $this->headScript(); ?>
+    </head>
+
+    <?= $this->htmlElement('body'); ?>
+        <div class="full"><?= $userBar; ?> </div>
+        <header class="full">
+          <div>
+            <div id="identity" aria-label='<?= $escape($siteTitle); ?>'>
+              <a href="<?= $site->url() ?>">
+                <?php if ($this->themeSetting('logo')): ?>
+                  <img src="<?= $this->themeSettingAssetUrl('logo'); ?>" alt="<?= $escape($siteTitle); ?>" />
+                <?php else: ?>
+                  <img src="<?= $siteAssetUrl('img/svg/marks/logo.svg'); ?>" alt="<?= $escape($siteTitle); ?>" />
+                <?php endif; ?>
+              </a>
+            </div>
+              <!--DESKTOP MENU START-->
+              <nav id="main-nav" class="desktop-nav" aria-label="Main navigation for <?= $escape($siteTitle) ?>">
+                  <?= $this->navigation($this->subNav)->menu()->renderMenu($container, $navOptions); ?>
+              </nav>
+              <!--DESKTOP MENU END-->
+
+              <!--HEADER SEARCH (desktop; the mobile overlay has its own) -->
+              <div id="nav-search" class="header-search">
+                <?= $this->partial('common/search-form'); ?>
+                <button class="search-form-clear" type="button" title="Clear search">x</button>
+              </div>
+
+              <!--MOBILE MENU START-->
+              <div id="mobile-menu" aria-label='Mobile Menu'>
+                  <div id="mobile-menu--header">
+                    <a id="mobile-menu--button" href="#" title="Menu">Menu</a>
+                  </div>
+              </div>
+              <!--MOBILE MENU END-->
+
+          </div>
+
+        </header>
+
+
+        <section id='splash' class='full empty'></section>
+        <section id='primary-content' class='region'>
+            <div>
+                <main id="main-content">
+                  <div id="content-stack" contentstack>
+                    <?= $this->content; ?>
+                  </div>
+                </main>
+            </div>
+        </section>
+        <section class='full' role="region" >
+          <div>
+            <div id='secondary-content' class="tier-container"></div>
+          </div>
+        </section>
+        <section id='feature-tier-1' class='full' role="region" style="display:none">
+          <div>
+            <div id='feature-tier-1-content' class="tier-container"></div>
+          </div>
+        </section>
+        <section id='feature-tier-2' class='full' role="region" style="display:none">
+          <div>
+            <div id='feature-tier-2-content' class="tier-container"></div>
+          </div>
+        </section>
+        <section id='feature-tier-2' class='full' role="region" style="display:none">
+          <div>
+            <div id='feature-tier-2-content' class="tier-container"></div>
+          </div>
+        </section>
+        <footer class="full">
+          <section class="footer--content">
+            <div class="footer--mark-container">
+              <a href="<?= $site->url() ?>">
+                <?php if ($this->themeSetting('footer_logo')): ?>
+                  <img src="<?= $this->themeSettingAssetUrl('footer_logo'); ?>" alt="<?= $escape($siteTitle); ?>" />
+                <?php else: ?>
+                  <img src="<?= $siteAssetUrl('img/svg/marks/logo_reversed.svg'); ?>" alt="<?= $escape($siteTitle); ?>" />
+                <?php endif; ?>
+              </a>
+            </div>
+            <?php if (!empty($this->themeSetting('footer'))): ?>
+              <div class="footer--text">
+                <?= $this->themeSetting('footer') ; ?>
+              </div>
+            <?php endif; ?>
+            <?php if (!empty($this->themeSetting('footer_links'))): ?>
+              <div class="footer--links">
+                <?= $this->themeSetting('footer_links'); ?>
+              </div>
+            <?php endif; ?>
+            <?php if (!empty($this->themeSetting('footer_sponsor_logos'))): ?>
+              <div class="footer--sponsor-logos">
+                <img src="<?= $this->themeSettingAssetUrl('footer_sponsor_logos'); ?>" alt="<?= $escape($siteTitle); ?>" />
+              </div>
+            <?php endif; ?>
+            <?php if (!empty($this->themeSetting('footer_sponsor_html'))): ?>
+              <div class="footer--sponsor-html">
+                <?= $this->themeSetting('footer_sponsor_html'); ?>
+              </div>
+            <?php endif; ?>
+
+          </section>
+        </footer>
+        <!-- Mobile overlay -->
+        <div id="mobile-menu--container">
+          <div id="mobile-menu--close">Close</div>
+          <div id="mobile-menu--search">
+            <?= $this->partial('common/search-form', ['query' => $this->params()->fromQuery(), 'resourceType' => 'user','searchType' => 'browser']); ?>
+          </div>
+          <?= $this->navigation($this->subNav)->menu()->renderMenu($container, $navOptions); ?>
+        </div>
+        <!-- Mobile overlay end-->
+    </body>
+</html>
+<! -- END OF /LAYOUT/LAYOUT.PHTML -->

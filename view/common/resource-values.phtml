@@ -1,0 +1,91 @@
+<?php /* Generated from the Advanced Agile Base Theme by tools/build-simplified.js — edit the source there, not this file. */ ?>
+<?php
+$translate = $this->plugin('translate');
+$escape = $this->plugin('escapeHtml');
+$valueDisplay = (function ($value, array $options = []) {
+    // Stand-in for the Agile Theme Tools valueDisplay helper: Omeka's own HTML for a value, without links when asked.
+    if ($value === null || $value === '') return '';
+    if (!is_object($value) || !method_exists($value, 'asHtml')) return htmlspecialchars((string) $value, ENT_QUOTES, 'UTF-8');
+    $html = $value->asHtml();
+    return array_key_exists('link', $options) && !$options['link'] ? strip_tags($html) : $html;
+});
+$propertyTerms = (new class($this) {
+    // Stand-in for the Agile Theme Tools propertyTerms helper: term lists from a comma-separated theme setting.
+    private $view;
+    public function __construct($view) { $this->view = $view; }
+    public function fromThemeSetting($key)
+    {
+        $v = trim((string) $this->view->themeSetting($key, ''));
+        return $v === '' ? [] : array_values(array_filter(array_map('trim', explode(',', $v))));
+    }
+    public function select(array $values, array $terms)
+    {
+        $out = [];
+        foreach ($terms as $term) if (isset($values[$term])) $out[$term] = $values[$term];
+        return $out;
+    }
+    public function sortByLabel(array $values)
+    {
+        uasort($values, function ($a, $b) {
+            return strcasecmp($a['alternate_label'] ?: $a['property']->label(), $b['alternate_label'] ?: $b['property']->label());
+        });
+        return $values;
+    }
+});
+$labelInfo = $this->setting('property_label_information');
+
+// Omit terms from the item metadata block. For instance, omit the description of the item because
+// it’s being displayed elsewhere.
+// Format: $metadata_exclusions = ['dcterms:termname'];
+
+
+$metadata_exclusions = [];
+
+// Order: the terms passed as displayValues(['orderTerms' => …]) (e.g. the site's Full Metadata Terms, see
+// item-summary-content), otherwise every property alphabetically by label.
+$values = !empty($orderTerms) ? $propertyTerms->select($values, $orderTerms) : $propertyTerms->sortByLabel($values);
+?>
+<!-- BEGIN common/resource-values.phtml -->
+<?php foreach ($values as $term => $propertyData):
+  // Omit excluded metadata
+  if (in_array($term,$metadata_exclusions)) {
+    continue;
+  }
+  ?>
+    <div class="property" data-term="<?php echo $escape($term); ?>" >
+        <div class="metadata-label">
+            <?php if ($propertyData['alternate_label']): ?>
+                <?php echo $escape($propertyData['alternate_label']); ?>
+            <?php else: ?>
+                <?php echo $escape($translate($propertyData['property']->label())); ?>
+            <?php endif; ?>
+            <?php if ('term' === $labelInfo): ?>
+                <span class="field-term">(<?php echo $escape($propertyData['property']->term()); ?>)</span>
+            <?php elseif ('vocab' === $labelInfo): ?>
+                <span class="field-term">(<?php echo $escape($propertyData['property']->vocabulary()->label()); ?>)</span>
+            <?php endif; ?>
+        </div>
+        <div class="values">
+            <?php
+            /** @var \Omeka\Api\Representation\ValueRepresentation $value */
+            foreach ($propertyData['values'] as $value):
+                // Formatting and links (search, resource, URI) come from the valueDisplay helper (AgileThemeTools).
+                $class = ['value'];
+                if ($value->valueResource()) {
+                    $class[] = 'resource';
+                    $class[] = $escape($value->valueResource()->resourceName());
+                } elseif ($value->uri()) {
+                    $class[] = 'uri';
+                }
+                if (!$value->isPublic()) {
+                    $class[] = 'private';
+                }
+                ?>
+                <div class="<?php echo implode(' ', $class); ?>" lang="<?php echo $escape($value->lang()); ?>">
+                    <div class='subject-title'><?= $valueDisplay($value) ?></div>
+                </div>
+            <?php endforeach; ?>
+        </div>
+    </div>
+<?php endforeach; ?>
+<!-- END common/resource-values.phtml -->
