@@ -19,11 +19,7 @@ $searchConfig = null; // Simplified theme: no Advanced Search
     $bodyTerm = $this->siteSetting('browse_body_property_term');
     foreach ($this->resources as $resource):
     ?>
-          <?= $partial('agile-item/card', [
-            'item' => $resource,
-            'containerElement' => 'li',
-            'classes' => $this->resourceType
-          ]) ?>
+          <?= $this->partial('agile-item/card', ['item' => $resource] + ['containerElement' => 'li', 'classes' => $this->resourceType]) ?>
     <?php endforeach; ?>
   </ul>
 

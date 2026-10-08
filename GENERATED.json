@@ -1,8 +1,8 @@
 {
-  "generatedAt": "2026-10-07T16:49:15.316Z",
+  "generatedAt": "2026-10-08T19:21:20.291Z",
   "source": "AgileBaseOmekaTheme",
   "sourceVersion": "2.0.0-dev",
-  "sourceCommit": "1669dff3b1224f361fa0273cf08377c6cd6fafc0",
+  "sourceCommit": "0ff143d050c120d1e3bc3178b88e427aaf19d1f2",
   "generator": "tools/build-simplified.js",
   "templates": [
     "layout/layout.phtml",
