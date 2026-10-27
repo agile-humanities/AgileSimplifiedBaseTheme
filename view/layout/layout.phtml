@@ -42,6 +42,8 @@ $agileColourConfig = [
     'brand_secondary_on_light' => 'ensure-contrast($brand_secondary, $surface_light)',
     'brand_secondary_on_dark' => 'ensure-contrast($brand_secondary, $surface_dark)',
     'surface_brand' => '$brand_primary',
+    'error_colour' => '#B42318',
+    'error_colour_on_dark' => '#F97066',
     'on_brand' => 'on-colour($surface_brand)',
     'surface_brand_secondary' => '$brand_secondary',
     'on_brand_secondary' => 'on-colour($surface_brand_secondary)',
@@ -206,17 +208,14 @@ if (!empty($userBar)) {
                 <?php endif; ?>
               </a>
             </div>
-              <!--DESKTOP MENU START-->
-              <nav id="main-nav" class="desktop-nav" aria-label="Main navigation for <?= $escape($siteTitle) ?>">
-                  <?= $this->navigation($this->subNav)->menu()->renderMenu($container, $navOptions); ?>
-              </nav>
-              <!--DESKTOP MENU END-->
-
-              <!--HEADER SEARCH (desktop; the mobile overlay has its own) -->
-              <div id="nav-search" class="header-search">
-                <?= $this->partial('common/search-form'); ?>
-                <button class="search-form-clear" type="button" title="Clear search">x</button>
+              <!--DESKTOP MENU + SEARCH (one right-aligned group; the mobile overlay carries its own menu and search form) -->
+              <div id="header-nav" class="header-nav">
+                <nav id="main-nav" class="desktop-nav" aria-label="Main navigation for <?= $escape($siteTitle) ?>">
+                    <?= $this->navigation($this->subNav)->menu()->renderMenu($container, $navOptions); ?>
+                </nav>
+                <?= $this->partial('common/header-search-link'); ?>
               </div>
+              <!--DESKTOP MENU + SEARCH END-->
 
               <!--MOBILE MENU START-->
               <div id="mobile-menu" aria-label='Mobile Menu'>
@@ -232,6 +231,7 @@ if (!empty($userBar)) {
 
 
         <section id='splash' class='full empty'></section>
+        <section id='main-title' class='full empty' role="region"></section>
         <section id='primary-content' class='region'>
             <div>
                 <main id="main-content">
@@ -249,11 +249,6 @@ if (!empty($userBar)) {
         <section id='feature-tier-1' class='full' role="region" style="display:none">
           <div>
             <div id='feature-tier-1-content' class="tier-container"></div>
-          </div>
-        </section>
-        <section id='feature-tier-2' class='full' role="region" style="display:none">
-          <div>
-            <div id='feature-tier-2-content' class="tier-container"></div>
           </div>
         </section>
         <section id='feature-tier-2' class='full' role="region" style="display:none">
@@ -292,8 +287,17 @@ if (!empty($userBar)) {
                 <?= $this->themeSetting('footer_sponsor_html'); ?>
               </div>
             <?php endif; ?>
-
           </section>
+          <?php if (!empty($this->themeSetting('subfooter_html')) || !empty($this->themeSetting('copyright'))): ?>
+          <section id="sub-footer">
+            <?php if (!empty($this->themeSetting('subfooter_html'))): ?>
+            <div class="sub-footer--text"><?= $this->themeSetting('subfooter_html') ?></div>
+            <?php endif; ?>
+            <?php if (!empty($this->themeSetting('copyright'))): ?>
+            <div class="sub-footer--copyright"><?= $this->themeSetting('copyright') ?></div>
+            <?php endif; ?>
+          </section>
+          <?php endif; ?>
         </footer>
         <!-- Mobile overlay -->
         <div id="mobile-menu--container">

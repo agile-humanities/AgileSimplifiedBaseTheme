@@ -10,7 +10,7 @@ logo_path: "map-get($asset_dirs,'svg') + $subdir_marks + '/logo.svg'"
 # KEY VALUES
 rootsize: "100%"
 base_line_height: 1.5
-scale: 1.33
+scale: 1.25
 max_width: 1900px
 legible_inset_width: 920px
 
@@ -20,16 +20,16 @@ legible_inset_width: 920px
 basefont: "Roboto, Tahoma, Arial, sans-serif"
 headingfont: "Roboto, Tahoma, Arial, sans-serif"
 altfont: "Georgia, serif"
-labelfont: $basefont
+compactfont: $basefont
 listfont: $basefont
 codefont: "'IBM Plex Mono', Monaco, Courier New, monospace"
 
 # Font sizing / Fluid type
-basetypesize: 1rem
+basetypesize: 1.1rem
 default-min-bp: sml
 default-max-bp: xlrg
 min_sizefactors: "(base: -1, h1: 3, h2: 2, h3: 1, h4: 0, h5: -1, h6: -1)"
-sizefactors: "(base: 0, h1: 4, h2: 3, h3: 2, h4: 1, h5: 0, h6: 0)"
+sizefactors: "(base: 0, h1: 7, h2: 3, h3: 2, h4: 1, h5: 0, h6: 0)"
 line_heights: "(base: $base_line_height, h1: 1.1, h2: 1.25, h3: 1.25, h4: $base_line_height, h5: $base_line_height, h6: $base_line_height)"
 typescale: "(base: 1, xsml: 1, sml: 1, med:1, lrg: 1, xlrg: 1, xxlrg: 1)"
 paragraph_spacing: "clamped(map-get($min_sizefactors,'base'),map-get($sizefactors,'base'),$default-min-bp,$default-max-bp,map-get($line_heights,base))"
@@ -79,6 +79,9 @@ brand_secondary_on_light: "ensure-contrast($brand_secondary, $surface_light)"
 brand_secondary_on_dark: "ensure-contrast($brand_secondary, $surface_dark)"
 # Brand colours as surfaces (decision 2026-10-06): explicit roles with an automatically picked text colour.
 surface_brand: $brand_primary
+# Validation: the error colour must read on $white and $surface_light; a dark variant for dark surfaces.
+error_colour: "#B42318"
+error_colour_on_dark: "#F97066"
 on_brand: "on-colour($surface_brand)"
 surface_brand_secondary: $brand_secondary
 on_brand_secondary: "on-colour($surface_brand_secondary)"
@@ -124,8 +127,8 @@ mobile_grid_gap_factor: -1
 grid_gap_factor: 0
 block_spacing: 2
 mobile_block_spacing: -2
-edge_padding_factor: 0
-mobile_edge_padding_factor: -1
+edge_padding_factor: -1
+mobile_edge_padding_factor: -2
 text_element_spacing: 3px
 
 # Structure
@@ -179,12 +182,16 @@ h5fontsize: "map-get($sizefactors,'h5')"
 h6fontsize: "map-get($sizefactors,'h6')"
 
 ## 04 UI | Needs an overhaul
-ui_icon_size: 25px
+ui_icon_size: 15px
 ui_padding: 10px
-ui_element_height: 50px
+ui_element_height: 40px
 ui_minheight: $ui_element_height
-ui_maxheight: 60px
+ui_maxheight: 40px
 ui_compactheight: 40px
+# Form composition (40_ui/10_components/_form_composition): the most cells a row may hold inside a two-column form
+form_columns_max_cells: 2
+facet_control_height: 32px
+reference_letter_size: 2rem   # the alphabet letters of the Reference block's index (compact circles)   # text, number and select controls inside a facet and the date range (one step below the UI element height)
 ui_largeheight: 80px
 ui_max_text_width: 500px
 ui_element_spacing: "rv($mobile_edge_padding_factor)"
@@ -215,7 +222,7 @@ btn_width: 280px
 btn_compactwidth: 180px
 btn_largewidth: 280px
 btn_max_width: 375px
-btn_icon_size: 25px
+btn_icon_size: 20px
 
 btn_fontsize: "clamped(0,1)"
 btn_compact_fontsize: "clamped(-1,0)"
@@ -299,6 +306,8 @@ card_border_radius: $border-radius
 welcome_block_bg: $black
 welcome_block_color: $on_dark
 menu_color: $on_light
+list_item_figure_width: 200px
+list_item_figure_width_mobile: 120px   # the list card's image column below the tablet breakpoint (a 200px column leaves too little for the text on a phone)
 
 # 06 Slide Viewer
 default_next_btn: "'data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiPz48c3ZnIGlkPSJhIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAxNi4yNCAzMCI+PGRlZnM+PHN0eWxlPi5ie2ZpbGw6I2ZmZjt9PC9zdHlsZT48L2RlZnM+PHBhdGggY2xhc3M9ImIiIGQ9Ik0xNi4yNCwxNWMwLC4zMi0uMTIsLjYzLS4zNiwuODdMMi4xMSwyOS42NGMtLjQ4LC40OC0xLjI3LC40OC0xLjc1LDAtLjQ4LS40OC0uNDgtMS4yNywwLTEuNzVMMTMuMjUsMTUsLjM2LDIuMTFDLS4xMiwxLjYzLS4xMiwuODQsLjM2LC4zNiwuODQtLjEyLDEuNjMtLjEyLDIuMTEsLjM2TDE1Ljg3LDE0LjEzYy4yNCwuMjQsLjM2LC41NiwuMzYsLjg3WiIvPjwvc3ZnPg=='"
@@ -310,6 +319,9 @@ slide_viewer_marker_size: 10px
 slide_viewer_ui_spacing: "rv(-1)"
 slide_viewer_midpoint: "50%"
 slide_viewer_background: $black
+slide_viewer_mobile_height: 60vh   # slideshow height below the tablet breakpoint (in the splash it fills the viewport from desktop)
+slide_viewer_tablet_height: 60vh
+slide_counter_font_size: 0.875rem   # the "3 / 12" counter that replaces the page markers below the tablet breakpoint
 
 page_marker_background: "neutral(30)"
 page_marker_background_hover: $brand_secondary
@@ -403,6 +415,13 @@ exposed_facet_desktop_width: 350px
 ui_mobile_app_controls_breakpoint: $desktop
 ui_mobile_app_controls_footer_height: $masthead_height
 ui_display_controls_icon_size: "$ui_mobile_app_controls_footer_height * 0.6"
+
+# OHMS viewer (OHMS Embed module's iframe, on item pages)
+ohms_viewer_height: 800px
+
+# IIIF presentation page block (Mirador / Universal Viewer for a manifest URL)
+iiif_block_height: 70vh
+iiif_block_height_desktop: 640px
 
 #mirador
 mirador_height_mobile: 60vh
