@@ -1,0 +1,136 @@
+<?php /* Copied from the Advanced Agile Base Theme by tools/build-simplified.js — edit the source there, not this file. Rendered only when the Agile Theme Tools module is active. */ ?>
+<?php
+/**
+ * Item Summary block: the Summary, with optional Full Metadata and Transcription tabs.
+ * The title area is the separate Item Header block (item-heading-content).
+ * The legacy single-block version is item-header-content.
+ *
+ * The Full Metadata tab is the theme setting "full_metadata_tab" (off by default: the full record is the Item Full
+ * Metadata block in the Main region). The Transcription tab appears when the item has a transcript (vra:text — the
+ * term is the one place to change when a transcript-field setting arrives). With a single panel there is no tab
+ * bar and no panel mechanism (design review G5).
+ *
+ * Panels size to their content. Unlike the legacy block, they are not held to the
+ * viewer's height (see omekaItemShowTabToggle.js).
+ *
+ * @var \Omeka\Api\Representation\ItemRepresentation $resource
+ */
+$translate = $this->plugin('translate');
+$escape = $this->plugin('escapeHtml');
+$searchHelper = $this->plugin('agileSearchHelper');
+$valueDisplay = $this->plugin('valueDisplay');
+$propertyTerms = $this->plugin('propertyTerms');
+$itemSetFacetHandler = $this->plugin('itemSetFacetHandler');
+$itemSetFacetHandler->getPublicItemSets();
+
+$item = $resource;
+
+$rights = [];
+$rights['value'] = $item->value('dcterms:rights');
+$rights['uriLabel'] = $item->value('dcterms:rights', ['type' => 'uri']);
+
+$transcriptTerm = 'vra:text';
+$hasTranscription = !empty($item->value($transcriptTerm));
+$showMetadataTab = (bool) $this->themeSetting('full_metadata_tab', false);
+$panelCount = 1 + ($showMetadataTab ? 1 : 0) + ($hasTranscription ? 1 : 0);
+$hasTabs = $panelCount > 1;
+
+$keyTerms = $propertyTerms->fromThemeSetting('key_terms') ?: ['dcterms:created','dcterms:date','dcterms:temporal','dcterms:subject','dcterms:spatial'];
+?>
+<!-- BEGIN common/resource-page-block-layout/item-summary-content -->
+<div class='item-summary'>
+  <div class="container-with-tabs-and-panels<?= $hasTabs ? '' : ' single-panel' ?>">
+    <?php if ($hasTabs): ?>
+    <div class="tab-ui ruled">
+      <a class="tab-ui--control description-tab active"><?= $translate('Summary') ?></a>
+      <?php if ($showMetadataTab): ?>
+        <a class="tab-ui--control metadata-tab"><?= $translate('Full Metadata') ?></a>
+      <?php endif; ?>
+      <?php if ($hasTranscription): ?>
+        <a class="tab-ui--control transcription-tab"><?= $translate('Transcription') ?></a>
+      <?php endif; ?>
+    </div>
+    <?php endif; ?>
+    <div class="panels">
+      <div class="description-panel">
+        <p class="description-text">
+          <?php $values = $item->value('dcterms:description', ['all' => true]); foreach ($values as $value) { echo $value->asHtml(); }?>
+        </p>
+        <div class='key-metadata'>
+          <div class='metadata-list metadata-list-top'>
+            <?php
+            // Display key terms
+            $activeTerms = [];
+            $itemValues = $item->values();
+            foreach ($keyTerms as $term) {
+              if (isset($itemValues[$term])) {
+                $activeTerms[$term] = $itemValues[$term];
+              }
+            }
+
+            foreach($activeTerms as $term => $propertyData):
+              if (!empty($propertyData['values'][0])):
+                /** @var \Omeka\Api\Representation\PropertyRepresentation $property */
+                $property = $propertyData['property'];
+
+                printf("<div class='property' data-term='%s'>\n",$term);
+                printf("   <div class='metadata-label'>%s</div>",!empty($propertyData['alternate_label']) ? $propertyData['alternate_label'] : $property->label());
+                print ("    <div class='values'>");
+                /** @var Omeka\Api\Representation\ValueRepresentation $value */
+                foreach($propertyData['values'] as $value)
+                  if($value->isPublic()):
+                    printf("       <div class='value'>%s</div>",$valueDisplay($value));
+                  endif;
+                print ("    </div>");
+                print ("</div>");
+              endif;
+            endforeach;
+            ?>
+            <div class="property">
+              <?php $itemSets = $item->itemSets(); ?>
+              <?php if (count($itemSets) > 0): ?>
+                <div class="label label-item-info metadata-label"><?= $translate(
+                    "Collections"
+                  ); ?></div>
+                <?php foreach ($itemSets as $itemSet): ?>
+                  <?php
+                  if ($itemSet->isPublic()):
+                    ?>
+                    <div class="value"><a class="item-set-link-top" href="<?= $escape(
+                        $itemSet->url()
+                      ); ?>"><?= $itemSet->displayTitle(); ?></a></div>
+                  <?php endif; ?>
+                <?php endforeach; ?>
+              <?php endif; ?>
+            </div>
+          </div>
+        </div>
+        <?php if (!empty($rights['value'])): ?>
+          <div class='rights'>
+            <div class="label">License</div>
+            <div class="value"><?= $valueDisplay($rights['value'], ['link' => false]); ?></div>
+            <?php if ($rights['uriLabel']): // a rights statement URI; the label only when there is one (design review G4) ?>
+            <div class="label">Copyright status</div>
+            <div class='value license-and-icon rights-statement'>
+              <div><?= $valueDisplay($rights['uriLabel']) ?></div>
+            </div>
+            <?php endif; ?>
+          </div>
+        <?php endif; ?>
+      </div>
+      <?php if ($showMetadataTab): ?>
+      <div class="metadata-panel metadata-list">
+        <?php // The site's Full Metadata Terms, in order; when none are set, every property alphabetically (see resource-values). ?>
+        <?= $item->displayValues(['orderTerms' => $propertyTerms->fromThemeSetting('full_metadata_terms')]); ?>
+      </div>
+      <?php endif; ?>
+      <?php if ($hasTranscription): ?>
+        <div class="transcription-panel">
+          <p class="metadata-label"><?= $translate('Transcription of this Item') ?></p>
+          <?= $valueDisplay($item->value($transcriptTerm), ['link' => false]); ?>
+        </div>
+      <?php endif; ?>
+    </div>
+  </div>
+</div>
+<!-- END common/resource-page-block-layout/item-summary-content -->

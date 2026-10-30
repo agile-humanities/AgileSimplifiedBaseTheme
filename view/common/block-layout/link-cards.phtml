@@ -1,0 +1,73 @@
+<?php /* Copied from the Advanced Agile Base Theme by tools/build-simplified.js — edit the source there, not this file. Rendered only when the Agile Theme Tools module is active. */ ?>
+<?php
+  $partial = $this->plugin('sitePartial');
+
+?>
+<!-- BEGIN /common/block-layout/link-cards -->
+  <div id="block-<?php echo $this->blockId; ?>" class="region site-link-cards <?php echo $this->classes; ?> <?php echo $this->regionClass; ?>" data-target-region-id="<?php echo $this->targetID; ?> ">
+  <div class="site-link-cards-intro">
+    <?= $partial('common/block-layout/link-cards-ornament',['attachments' => $attachments]) ?>
+    <?php if ($this->hasTitle || $this->hasIntroduction): ?>
+      <div class='title-area'>
+        <?php if ($this->hasTitle): ?>
+          <h2><?php echo $this->title; ?></h2>
+        <?php endif; ?>
+        <?php if ($this->hasIntroduction): ?>
+          <div class='block-introduction'>
+            <?php echo $this->introduction; ?>
+          </div>
+        <?php endif; ?>
+        <?php if ($this->hasButton): ?>
+          <?php printf('<a class="btn" href="%s" alt="%s">%s</a>',$this->buttonPath,$this->buttonText,$this->buttonText); ?>
+        <?php endif; ?>
+      </div>
+    <?php endif; ?>
+  </div>
+
+  <?php $i=0; ?>
+
+  <?php foreach($this->itemFields as $itemFieldSet): ?>
+    <?php
+
+    $item = isset($attachments[$i]) ? $attachments[$i]->item() : null;
+
+    if (is_array($itemFieldSet)):
+      ?>
+      <div class="item resource link-card">
+        <a title='<?php echo $this->itemFields[$i]["title"]; ?>' href='<?php echo $this->itemFields[$i]["url"]; ?>'>
+            <?php
+            if (!empty($this->itemFields[$i]["thumbnailUrl"])):
+              printf('<figure><img src="%s" alt="%s" /></figure>',$this->itemFields[$i]["thumbnailUrl"],$this->itemFields[$i]["title"] . " Thumbnail");
+            elseif (!empty($this->itemFields[$i]["representativeMedia"])):
+              // The linked page's representative image (resolved by the block when the link is a page of this site).
+              echo "<figure>" . $this->thumbnail($this->itemFields[$i]["representativeMedia"], $this->thumbnailType) . "</figure>";
+            elseif ($item):
+              $media = $attachments[$i]->media() ?: $item->primaryMedia();
+              if ($media):
+                echo "<figure>". $this->thumbnail($media, $this->thumbnailType) . "</figure>"; // $item->displayTitle()
+              endif;
+            endif;
+            ?>
+          <div class="link-card-info">
+            <?php if (!empty($this->itemFields[$i]["label"])): ?>
+              <div class='content-label'><?php echo  $this->itemFields[$i]["label"]; ?></div>
+            <?php endif; ?>
+            <h3><?php echo $this->itemFields[$i]["title"]; ?></h3>
+            <?php if (!empty($this->itemFields[$i]["subtitle"])): ?>
+              <div class='deck'><?php echo  $this->itemFields[$i]["subtitle"]; ?></div>
+            <?php endif; ?>
+            <hr>
+            <?php
+            $caption = !empty($this->itemFields[$i]["description"]) || !isset($attachments[$i]) ? $this->itemFields[$i]["description"] : $attachments[$i]->caption();
+            if ($caption):
+              ?>
+              <div class="description"><?php echo $caption; ?></div>
+            <?php endif; ?>
+            <div class='more' href='<?php echo $this->itemFields[$i]["url"]; ?>'>View</div>
+          </div>
+        </a></div>
+    <?php endif; ?>
+    <?php $i++; ?>
+  <?php endforeach; ?>
+</div>
+<!-- END /common/block-layout/link-cards -->

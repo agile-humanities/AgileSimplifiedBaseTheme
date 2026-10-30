@@ -1,0 +1,86 @@
+<?php /* Copied from the Advanced Agile Base Theme by tools/build-simplified.js — edit the source there, not this file. Rendered only when the Agile Theme Tools module is active. */ ?>
+<?php
+// Variables also available:
+// $labelText
+// $subtitle
+// $buttonText
+$plugins = $this->getHelperPluginManager();
+$partial = $this->plugin('partial');
+$thumbnailer = $plugins->get('thumbnail');
+
+?>
+<!-- TEMPLATE START common/block-layout/slideshow.phtml -->
+<div id="block-<?= $this->blockId; ?>" class="slideshow-block slideviewer-container region <?= $this->regionClass; ?>" data-target-region-id="<?= $this->targetID; ?>">
+    <div class='slide-container'>
+          <slide-viewer class="<?= $hasAudioAttachment ? 'slideshow-with-audio' : ''; ?>" option-slidesPerRow='<?= $optionSlidesPerRow; ?>' option-autoplay='<?= $optionAutoPlay; ?>' option-fade='<?= $optionFade; ?>' integratedcontrols>
+            <div slot='slides'>
+                  <?php if ($useTitleSlide): ?>
+                      <slide-item class="title-slide">
+                          <?php // The title slide carries no image for now (punch list 2026-10-28): the panel is the dark
+                                // surface under the title text (_slide_item.sass). $titleSlideMedia stays available. ?>
+                          <div slot='slide-content'></div>
+                          <div slot='slide-caption'>
+                              <div class="slide-title-content">
+
+                                  <?php if (!empty($labelText)): ?>
+                                      <div class='item-label'><?= $labelText; ?></div>
+                                  <?php endif; ?>
+                                  <?php if (!empty($titleSlideTitle)): ?>
+                                      <h2><?= $titleSlideTitle; ?></h2>
+                                  <?php endif; ?>
+                                  <?php if (!empty($subtitle)): ?>
+                                      <div class='deck'><?= $subtitle; ?></div>
+                                  <?php endif; ?>
+                                  <?php if (!empty($titleSlideIntro)): ?>
+                                      <?= $titleSlideIntro; ?>
+                                  <?php endif; ?>
+                                  <?php if (!empty($buttonText)): ?>
+                                    <div class="arrow-container">
+                                    <div class='slickNext next-slide'>
+                                         <a class="more"><?= $buttonText ?></a>
+                                    </div>
+
+                                  </div>
+                                  <?php endif; ?>
+                              </div>
+                          </div>
+                      </slide-item>
+                  <?php endif; ?>
+                  <?php /** @var Omeka\Api\Representation\SiteBlockAttachmentRepresentation $attachment **/ ?>
+                  <?php foreach ($attachments as $attachment): ?>
+                        <?php
+                        /** @var Omeka\Api\Representation\ItemRepresentation $item */
+                        // var_dump("Media ID: " . $attachment->media()->id());
+                        $item = $attachment->item();
+                        $media = $attachment->media() ?: $item->primaryMedia();
+                        ?>
+                        <?= $partial('agile-item/slide-item', [
+                          'item' => $item,
+                          'media' => $attachment->media() ?: $item->primaryMedia(),
+                          'caption' => $attachment->caption() ?: $item->displayDescription(),
+                          'imageSize' => 'large'
+                        ]) ?>
+                        <?php if (!empty($attachment->caption())): ?>
+
+                        <?php endif; ?>
+                  <?php endforeach; ?>
+            </div>
+              <?php if($hasAudioAttachment): ?>
+                  <div class="audio-controls">
+                      <div class="audio-player">
+                          <?= $audioAttachment->media()->render(); ?>
+                          <div class="audio-message">
+                              <a href='#' class='audio-text-play-control' title='Play audio' data-playbtnmsg='Play audio slideshow' data-stopbtnmsg='Pause audio slideshow'>Play audio slideshow.</a>
+                          </div>
+                      </div>
+                      <?php if ($audioAttachment->caption()): ?>
+                          <div class="audio-caption">
+                              <?= $audioAttachment->caption(); ?>
+                          </div>
+                      <?php endif; ?>
+                  </div>
+              <?php endif; ?>
+          </slide-viewer>
+    </div>
+</div>
+<!-- TEMPLATE END common/block-layout/slideshow.phtml -->

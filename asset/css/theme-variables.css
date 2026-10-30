@@ -14,15 +14,15 @@
 
     --colour--1: #00bdd4;                /* clr1: the configuration's $brand_primary; used as is 18 times */
     --colour--2: #bf609b;                /* clr2: the configuration's $brand_secondary; used as is 20 times */
-    --colour--3: #0e3a40;                /* clr3: the configuration's $surface_dark; used as is 5 times */
+    --colour--3: #0e3a40;                /* clr3: the configuration's $surface_dark; used as is 6 times */
     --colour--4: #eaf3f4;                /* clr4: the configuration's $surface_light; used as is 9 times */
-    --colour--5: #d98536;                /* clr5: the configuration's $visual_impact; used as is 7 times */
+    --colour--5: #d98536;                /* clr5: the configuration's $visual_impact; used as is 10 times */
     --colour--6: #315faa;                /* clr6: used as is 2 times */
     --colour--7: #7dbf60;                /* clr7: used as is 2 times */
     --colour--8: #e1bb0b;                /* clr8: used as is 2 times */
     --colour--9: #e5336d;                /* clr9: used as is 2 times */
-    --colour--black: #00171a;            /* black: the configuration's $on_light, $footer_bg, $welcome_block_bg, $slide_viewer_background; used as is 77 times */
-    --colour--white: #ffffff;            /* white: the configuration's $on_dark, $bgcolor, $btn_submit_hover_color, $btn_submit_hover_border_color, $btn_submit_hover_bg_color, $btn_search_bg_color, $btn_search_hover_bg_color, $circular_audio_background; used as is 98 times */
+    --colour--black: #00171a;            /* black: the configuration's $on_light, $footer_bg, $welcome_block_bg, $slide_viewer_background; used as is 78 times */
+    --colour--white: #ffffff;            /* white: the configuration's $on_dark, $bgcolor, $btn_submit_hover_color, $btn_submit_hover_border_color, $btn_submit_hover_bg_color, $btn_search_bg_color, $btn_search_hover_bg_color, $circular_audio_background; used as is 100 times */
     --colour--true-black: #000000;       /* true_black: used as is 0 times */
     --colour--error-colour: #b42318;     /* error_colour: used as is 6 times */
     --colour--error-colour-on-dark: #f97066; /* error_colour_on_dark: used as is 0 times */
@@ -93,9 +93,9 @@
   --colour--9--watermark: rgb(249.8, 214.2, 225.8);          1 × — color-mix(in srgb, var(--colour--9) 20%, var(--colour--white))
   --colour--neutral--10: rgb(229.5, 231.8, 232.1);           7 × — color-mix(in srgb, var(--colour--black) 10%, var(--colour--white))
   --colour--neutral--20: rgb(204, 208.6, 209.2);             10 × — color-mix(in srgb, var(--colour--black) 20%, var(--colour--white))
-  --colour--neutral--30: rgb(178.5, 185.4, 186.3);           6 × — color-mix(in srgb, var(--colour--black) 30%, var(--colour--white))
-  --page-marker-background: rgb(178.5, 185.4, 186.3);        6 × — color-mix(in srgb, var(--colour--black) 30%, var(--colour--white))
-  --colour--neutral--40: rgb(153, 162.2, 163.4);             20 × — color-mix(in srgb, var(--colour--black) 40%, var(--colour--white))
+  --colour--neutral--30: rgb(178.5, 185.4, 186.3);           7 × — color-mix(in srgb, var(--colour--black) 30%, var(--colour--white))
+  --page-marker-background: rgb(178.5, 185.4, 186.3);        7 × — color-mix(in srgb, var(--colour--black) 30%, var(--colour--white))
+  --colour--neutral--40: rgb(153, 162.2, 163.4);             21 × — color-mix(in srgb, var(--colour--black) 40%, var(--colour--white))
   --colour--neutral--50: rgb(127.5, 139, 140.5);             13 × — color-mix(in srgb, var(--colour--black) 50%, var(--colour--white))
   --colour--neutral--60: rgb(102, 115.8, 117.6);             9 × — color-mix(in srgb, var(--colour--black) 60%, var(--colour--white))
   --colour--neutral--70: rgb(76.5, 92.6, 94.7);              14 × — color-mix(in srgb, var(--colour--black) 70%, var(--colour--white))
@@ -119,35 +119,35 @@
 /* SIZING — the modular scale as the theme built it (spacing and type steps, widths, heights). Read them in your own CSS: changing them here does not change the theme's own rules, which have the values compiled in. */
 /*
   --scale: 1.25;
-  --line-height: 1.5;
+  --line-height: 1.4;
   --max-width: 1900px;
   --legible-width: 920px;
   --masthead-height: 40px;
   --ui-height: 40px;
   --ui-radius: 8px;
-  --space-n4: 0.6144rem;
-  --type-n4: 0.45rem;
-  --space-n3: 0.768rem;
-  --type-n3: 0.56rem;
-  --space-n2: 0.96rem;
-  --type-n2: 0.7rem;
-  --space-n1: 1.2rem;
-  --type-n1: 0.88rem;
-  --space-0: 1.5rem;
-  --type-0: 1.1rem;
-  --space-1: 1.875rem;
-  --type-1: 1.38rem;
-  --space-2: 2.34375rem;
-  --type-2: 1.72rem;
-  --space-3: 2.9296875rem;
-  --type-3: 2.15rem;
-  --space-4: 3.662109375rem;
-  --type-4: 2.69rem;
-  --space-5: 4.5776367188rem;
-  --type-5: 3.36rem;
-  --space-6: 5.7220458984rem;
-  --type-6: 4.2rem;
-  --grid-gap-size: 24;
+  --space-n4: 0.57344rem;
+  --type-n4: 0.4rem;
+  --space-n3: 0.7168rem;
+  --type-n3: 0.5rem;
+  --space-n2: 0.896rem;
+  --type-n2: 0.62rem;
+  --space-n1: 1.12rem;
+  --type-n1: 0.78rem;
+  --space-0: 1.4rem;
+  --type-0: 0.97rem;
+  --space-1: 1.75rem;
+  --type-1: 1.21rem;
+  --space-2: 2.1875rem;
+  --type-2: 1.52rem;
+  --space-3: 2.734375rem;
+  --type-3: 1.89rem;
+  --space-4: 3.41796875rem;
+  --type-4: 2.37rem;
+  --space-5: 4.2724609375rem;
+  --type-5: 2.96rem;
+  --space-6: 5.3405761719rem;
+  --type-6: 3.7rem;
+  --grid-gap-size: 22.4;
 */
 
 /* OTHER VARIABLES the stylesheet declares (breakpoints, the library's palette shades, …). Informational. */
@@ -185,7 +185,7 @@
   --animation--heartbeat: 1000;
   --animation--slidetransition: 1000;
   --slide-viewer-background: #00171A;
-  --slide-nav-bottom: 1.5rem;
+  --slide-nav-bottom: 1.4rem;
   --slide-nav-top: initial;
   --slide-nav-left: initial;
   --slide-nav-right: initial;
@@ -195,12 +195,12 @@
   --slide-nav-align-items: center;
   --slide-nav-height: 2rem;
   --sequential-nav-top: initial;
-  --sequential-nav-bottom: 0.96rem;
+  --sequential-nav-bottom: 0.896rem;
   --sequential-nav-left: 50%;
   --sequential-nav-right: auto;
   --sequential-nav-justify-content: space-between;
   --sequential-nav-align-items: center;
-  --sequential-control-spacing: 1.2rem;
+  --sequential-control-spacing: 1.12rem;
   --sequential-control-btn-height: 2rem;
   --sequential-control-btn-width: 1.5rem;
   --next-btn-background: no-repeat url(data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiPz48c3ZnIGlkPSJhIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAxNi4yNCAzMCI+PGRlZnM+PHN0eWxlPi5ie2ZpbGw6I2ZmZjt9PC9zdHlsZT48L2RlZnM+PHBhdGggY2xhc3M9ImIiIGQ9Ik0xNi4yNCwxNWMwLC4zMi0uMTIsLjYzLS4zNiwuODdMMi4xMSwyOS42NGMtLjQ4LC40OC0xLjI3LC40OC0xLjc1LDAtLjQ4LS40OC0uNDgtMS4yNywwLTEuNzVMMTMuMjUsMTUsLjM2LDIuMTFDLS4xMiwxLjYzLS4xMiwuODQsLjM2LC4zNiwuODQtLjEyLDEuNjMtLjEyLDIuMTEsLjM2TDE1Ljg3LDE0LjEzYy4yNCwuMjQsLjM2LC41NiwuMzYsLjg3WiIvPjwvc3ZnPg==);
@@ -208,7 +208,7 @@
   --page-marker-width: 10px;
   --page-marker-height: 10px;
   --page-marker-border-radius: 50%;
-  --page-marker-margin: 0 1.2rem 0 0;
+  --page-marker-margin: 0 1.12rem 0 0;
   --page-marker-background-hover: #BF609B;
   --page-marker-transform-hover: none;
   --page-marker-background-active: #BF609B;
@@ -225,7 +225,7 @@
   --slide-item-slide-padding: 0;
   --slide-item-slide-margin: 0;
   --slide-item-content-padding: 0;
-  --slide-item-caption-padding: 0 1.5rem;
+  --slide-item-caption-padding: 0 1.4rem;
   --slide-item-caption-height: auto;
   --slide-item-caption-position: absolute;
   --slide-item-caption-bottom: 0;

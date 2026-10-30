@@ -1,0 +1,36 @@
+<?php /* Copied from the Advanced Agile Base Theme by tools/build-simplified.js — edit the source there, not this file. Rendered only when the Agile Theme Tools module is active. */ ?>
+<?php
+  $translate = $this->plugin('translate');
+  $partial = $this->plugin('sitePartial');
+?>
+<!-- BEGIN TEMPLATE: /common/block-layout/item-listing.phtml -->
+<div id="block-<?php echo $this->blockId; ?>" class="item-listing region <?php echo $this->regionClass; ?>" data-target-region-id="<?php echo $this->targetID; ?> ">
+    <?php if ($this->hasTitle || $this->hasIntroduction): ?>
+        <div class='title-area'>
+            <?php if ($this->hasTitle): ?>
+                <h2><?php echo $this->title; ?></h2>
+            <?php endif; ?>
+            <?php if ($this->hasIntroduction): ?>
+                <div class='block-introduction'>
+                    <?php echo $this->introduction; ?>
+                </div>
+            <?php endif; ?>
+            <?php if ($this->hasButton): ?>
+                <?php // A more-link ("Browse all items →"), not a button: the listing's call to action is a navigation. ?>
+                <?php printf('<a class="more" href="%s">%s</a>', $this->buttonPath, $this->buttonText); ?>
+            <?php endif; ?>
+        </div>
+    <?php endif; ?>
+    <?php /** For masonry add masonry-grid class to ul below */ ?>
+    <ul class="listing resource-list search-results-list grid">
+          <?php
+          $headingTerm = $this->siteSetting('browse_heading_property_term');
+          $bodyTerm = $this->siteSetting('browse_body_property_term');
+          foreach ($attachments as $attachment):
+          ?>
+            <?= $this->card($attachment->item(), ['containerElement' => 'li']) ?>
+          <?php endforeach; ?>
+    </ul>
+
+</div>
+<!-- END TEMPLATE: /common/block-layout/item-listing.phtml -->

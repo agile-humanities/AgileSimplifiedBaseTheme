@@ -1,0 +1,108 @@
+<?php /* Copied from the Advanced Agile Base Theme by tools/build-simplified.js — edit the source there, not this file. Rendered only when the Agile Theme Tools module is active. */ ?>
+<?php
+use Omeka\Api\Representation\ItemRepresentation;
+
+$translate = $this->plugin('translate');
+$escape = $this->plugin('escapeHtml');
+$valueDisplay = $this->plugin('valueDisplay');
+$plugins = $this->getHelperPluginManager();
+$thumbnailer = $plugins->get('thumbnail');
+$thumbnailSize = 'large';
+$textLimit = $textLimit ?? 600;
+$showTitleOption = $showTitleOption ?? 'item_title';
+
+try {
+  $textSummary = $this->plugin('textSummary');
+} catch (Exception $e)  {
+  $textSummary = null;
+}
+
+?>
+<!-- BEGIN agile-item/slide-item.phtml -->
+<slide-item class="slide-card">
+  <?php
+  /** @var Omeka\Api\Representation\ItemRepresentation */
+  if ($item):
+    $date = [];
+    $date['label'] = !empty($itemValue['dcterms:created']['alternate_label']) ?  $itemValue['dcterms:created']['alternate_label'] : 'Date';
+    $date['value'] = $item->value('dcterms:created');
+
+    $backupDate = [];
+    $backupDate['label'] = !empty($itemValue['dcterms:date']['alternate_label']) ?  $itemValue['dcterms:date']['alternate_label'] : 'Date';
+    $backupDate['value'] = $item->value('dcterms:date');
+
+    $itemSets = [];
+
+    // Create an array of Item Set links. Keyed by title for sorting.
+
+    foreach($item->itemSets() as $itemSet) {
+      $itemSets[$itemSet->title()] = $itemSet->linkPretty();
+    }
+
+    // Sort Item Sets.
+
+    ksort($itemSets);
+
+    ?>
+    <?php
+    /** @var \Omeka\Api\Representation\MediaRepresentation $media */
+    $media = $media ?? $item->primaryMedia();
+    $caption = $caption ?? $item->displayDescription();
+    $thumbnail = $media ? $thumbnailer($media,$thumbnailSize) : '';
+    $contributors = $item->value('dcterms:creator', ['all' => true]);
+    ?>
+    <?php
+    if ($media):
+      ?>
+      <div slot='slide-content'>
+        <a href="<?= $item->url() ?>" aria-labelledby="caption-title-<?= $item->id() ?>">
+          <?= $thumbnail; ?>
+        </a>
+      </div>
+    <?php endif; ?>
+    <div class='reversed' slot='slide-caption'>
+        <div class="item-info">
+          <div class="item title-container">
+            <?php if ($showTitleOption == 'item_title'): ?>
+              <h3 id="caption-title-<?= $item->id() ?>"><?= $item->displayTitle() ?></h3>
+            <?php elseif ($showTitleOption == 'file_name'): ?>
+              <h3 id="caption-title-<?= $item->id() ?>"><?= $media->displayTitle(); ?></h3>
+            <?php endif; ?>
+            <div class="item item-description">
+              <?php
+              if ($caption):
+                echo $caption;
+              endif;
+              ?>
+              <div class="metadata-container">
+                <?php if (!empty($date['value'])) : ?>
+                  <div class='metadata-item' data-term='dcterms:created'>
+                    <div class='label'><?php echo($date['label']); ?></div>
+                    <div class='value'><?php echo $valueDisplay($date['value'], ['link' => false]); ?></div>
+                  </div>
+                <?php elseif (!empty($backupDate['value'])) : ?>
+                  <div class='metadata-item' data-term='dcterms:date'>
+                    <div class='label'><?php echo($backupDate['label']); ?></div>
+                    <div class='value'><?php echo $valueDisplay($backupDate['value'], ['link' => false]); ?></div>
+                  </div>
+                <?php else: ?>
+                <?php endif; ?>
+                <?php $itemSets = $item->itemSets(); ?>
+                <?php if (!empty($itemSets)): $firstItemSet = reset($itemSets); ?>
+                  <div class='metadata-item' data-term=''>
+                    <div class='label'><?= $this->translate('Collection') ?></div>
+                    <div class='value'>
+                      <a class='item-set-link' href="<?= $this->escapeHtml($firstItemSet->url()) ?>"><?= $this->escapeHtml($firstItemSet->displayTitle()) ?></a>
+                    </div>
+                  </div>
+                <?php endif; ?>
+              </div>
+              <div id="caption-more-<?= $item->id() ?>"><a class="more" href="<?= $item->url() ?>" aria-labelledby="caption-title-<?= $item->id() ?>">More about this item</a></div>
+            </div>
+          </div>
+
+        </div>
+    </div>
+  <?php endif; ?>
+</slide-item>
+<!-- END agile-item/slide-item.phtml -->

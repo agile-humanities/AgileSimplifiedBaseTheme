@@ -1,0 +1,29 @@
+<?php /* Copied from the Advanced Agile Base Theme by tools/build-simplified.js — edit the source there, not this file. Rendered only when the Agile Theme Tools module is active. */ ?>
+<!-- BEGIN AgileThemeTools/view/section-list-capsules -->
+<div id="block-<?php echo $this->blockId; ?>" class="listing-capsules region <?php echo $this->regionClass; ?> <?php echo $this->classes ?>" data-target-region-id="<?php echo $this->targetID; ?>">
+    <?php if ($this->hasTitle): ?>
+        <h2><?php echo $this->title; ?></h2>
+    <?php endif; ?>
+    <?php if ($this->hasIntroduction): ?>
+        <div class='block-introduction'>
+            <?php echo $this->introduction; ?>
+        </div>
+    <?php endif; ?>
+    <?php if ($this->hasPages): ?>
+    <div class="grid">
+        <?php $escape = $this->plugin('escapeHtml'); ?>
+        <?php foreach($this->pages as $page): $card = $this->card()->prepare($page); if (!$card) continue; ?>
+            <div class='capsule'>
+                <?php if ($card['image']): ?>
+                    <div class="representative-image"><div class="item resource"><figure><a href="<?= $escape($card['url']) ?>"><?= $card['image'] ?></a></figure></div></div>
+                <?php endif; ?>
+                <h3><a href='<?= $escape($card['url']) ?>'><?= $escape($card['title']) ?></a></h3>
+                <?php if ($card['byline'] !== ''): ?><div class="byline"><?= $escape($card['byline']) ?></div><?php endif; ?>
+                <?php if ($card['summary'] !== ''): ?><div class="excerpt"><p><?= $card['summary'] ?></p></div><?php endif; ?>
+                <a class='more' href='<?= $escape($card['url']) ?>'>View this item</a>
+            </div>
+        <?php endforeach ?>
+    </div>
+    <?php endif; ?>
+</div>
+<!-- END AgileThemeTools/view/section-list-capsules -->
