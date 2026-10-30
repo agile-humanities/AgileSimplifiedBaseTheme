@@ -2,7 +2,7 @@
  * agile-generic-theme v2.0.0-dev
  * Base Omeka theme and front-end development system.
  * (c) 2026 
- * MIT License
+ * CECILL-2.1 License
  * https://github.com/agile-humanities/AgileBaseOmekaTheme.git
  */
 
